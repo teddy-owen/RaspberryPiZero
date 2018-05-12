@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 # Copyright 2017 Google Inc.
 #
@@ -80,6 +79,7 @@ def main():
                 annotator.clear()
                 for face in faces:
                     annotator.bounding_box(transform(face.bounding_box), fill=0)
+                    annotator.text((5,5), "Welcome to the family room!")
                 annotator.update()
                 #print('Iteration #%d: num_faces=%d' % (i, len(faces)))
 
