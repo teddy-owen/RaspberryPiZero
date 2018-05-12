@@ -276,6 +276,10 @@ class JoyDetector(object):
                     player.play(SIREN_SOUND)
                     animator.danger()
 
+                def transform(bounding_box):
+                    x, y, width, height = bounding_box
+                    return (scale_x * x, scale_y * y, scale_x * (x + width), scale_y * (y + height))
+
                 # Blend the preview layer with the alpha value from the flags.
                 #camera.start_preview(alpha=preview_alpha)
                 camera.start_preview()
@@ -289,12 +293,13 @@ class JoyDetector(object):
                 prev_joy_score = 0.0
                 with CameraInference(face_detection.model()) as inference:
                     logger.info('Model loaded.')
-                    player.play(MODEL_LOAD_SOUND)
+                    #player.play(MODEL_LOAD_SOUND)
                     for i, result in enumerate(inference.run()):
                         annotator.clear()
                         faces = face_detection.get_faces(result)
                         for face in faces:
                             annotator.bounding_box(transform(face.bounding_box), fill=0)
+                            annotator.text((5,5), "I detect a human")
                         photographer.update_faces(faces)
 
                         joy_score = joy_score_moving_average.next(average_joy_score(faces))
@@ -302,10 +307,8 @@ class JoyDetector(object):
 
                         if joy_score >= JOY_SCORE_PEAK:
                             annotator.text((5,5), "I detect a happy human")
-                        elif joy_score <= JOY_SCORE_MIN:
+                        elif joy_score <= JOY_SCORE_MIN > 0.0:
                             annotator.text((5,5), "I detect a sad human")
-                        else:
-                            annotator.text((5,5), "I detect a human")
 
                         #if joy_score > JOY_SCORE_PEAK > prev_joy_score:
                         #    player.play(JOY_SOUND)
