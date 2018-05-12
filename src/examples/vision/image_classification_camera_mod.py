@@ -73,6 +73,7 @@ def main():
         annotator.update()
         return
 
+    print("Running Image Classification Camera...")
     with PiCamera() as camera:
         # Forced sensor mode, 1640x1232, full FoV. See:
         # https://picamera.readthedocs.io/en/release-1.13/fov.html#sensor-modes
