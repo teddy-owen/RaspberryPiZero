@@ -285,6 +285,8 @@ class JoyDetector(object):
                 camera.start_preview()
 
                 annotator = Annotator(camera, dimensions=(320, 240))
+                scale_x = 320 / 1640
+                scale_y = 240 / 1232
 
                 button = Button(23)
                 button.when_pressed = sound_alarm
@@ -297,14 +299,13 @@ class JoyDetector(object):
                     for i, result in enumerate(inference.run()):
                         annotator.clear()
                         faces = face_detection.get_faces(result)
-                        for face in faces:
-                            annotator.bounding_box(transform(face.bounding_box), fill=0)
-                            annotator.text((5,5), "I detect a human")
-                        photographer.update_faces(faces)
-
                         joy_score = joy_score_moving_average.next(average_joy_score(faces))
                         animator.update_joy_score(joy_score)
-
+                        photographer.update_faces(faces)
+                        for face in faces:
+                            annotator.bounding_box(transform(face.bounding_box), fill=0)
+                            #annotator.text((5,5), "I detect a human")
+                        
                         if joy_score >= JOY_SCORE_PEAK:
                             annotator.text((5,5), "I detect a happy human")
                         elif joy_score <= JOY_SCORE_MIN > 0.0:
