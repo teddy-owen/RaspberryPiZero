@@ -1,0 +1,13 @@
+WARNING:root:LoadModel: Cannot load model during processing.
+Traceback (most recent call last):
+  File "face_detection_camera_mod.py", line 90, in <module>
+    main()
+  File "face_detection_camera_mod.py", line 73, in main
+    with CameraInference(face_detection.model()) as inference:
+  File "/opt/aiy/projects-python/src/aiy/vision/inference.py", line 69, in __init__
+    self._engine.start_camera_inference(self._key, params)
+  File "/opt/aiy/projects-python/src/aiy/vision/inference.py", line 251, in start_camera_inference
+    self._communicate(request)
+  File "/opt/aiy/projects-python/src/aiy/vision/inference.py", line 189, in _communicate
+    raise InferenceException(response.status.message)
+aiy.vision.inference.InferenceException: StartCameraInference: Camera inference is already running.
