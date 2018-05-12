@@ -305,13 +305,13 @@ class JoyDetector(object):
                         photographer.update_faces(faces)
                         for face in faces:
                             annotator.bounding_box(transform(face.bounding_box), fill=0)
-                            annotator.text((5,5), "I detect a human")
-                        
+                            
                         if joy_score >= JOY_SCORE_PEAK:
                             annotator.text((5,5), "I detect a happy human")
                         elif joy_score > 0 and joy_score <= JOY_SCORE_MIN:
                             annotator.text((5,5), "I detect a sad human")
-
+                        elif joy_score > 0:
+                            annotator.text((5,5), "I detect a human")
                         #if joy_score > JOY_SCORE_PEAK > prev_joy_score:
                         #    player.play(JOY_SOUND)
                         #elif joy_score < JOY_SCORE_MIN < prev_joy_score:
