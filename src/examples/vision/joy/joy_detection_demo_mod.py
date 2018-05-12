@@ -217,11 +217,11 @@ class Animator(object):
     def __init__(self, leds, done):
         self._leds = leds
         self._done = done
+        self._danger = False
         self._joy_score = AtomicValue(0.0)
         self._thread = threading.Thread(target=self._run)
         self._thread.start()
-        self._danger = False
-
+        
     def _run(self):
         while not self._done.is_set():
             joy_score = self._joy_score.value
@@ -276,6 +276,8 @@ class JoyDetector(object):
                     player.play(SIREN_SOUND)
                     animator.danger()
 
+                scale_x = 320 / 1640
+                scale_y = 240 / 1232
                 def transform(bounding_box):
                     x, y, width, height = bounding_box
                     return (scale_x * x, scale_y * y, scale_x * (x + width), scale_y * (y + height))
@@ -285,8 +287,7 @@ class JoyDetector(object):
                 camera.start_preview()
 
                 annotator = Annotator(camera, dimensions=(320, 240))
-                scale_x = 320 / 1640
-                scale_y = 240 / 1232
+
 
                 button = Button(23)
                 button.when_pressed = sound_alarm
@@ -304,11 +305,11 @@ class JoyDetector(object):
                         photographer.update_faces(faces)
                         for face in faces:
                             annotator.bounding_box(transform(face.bounding_box), fill=0)
-                            #annotator.text((5,5), "I detect a human")
+                            annotator.text((5,5), "I detect a human")
                         
                         if joy_score >= JOY_SCORE_PEAK:
                             annotator.text((5,5), "I detect a happy human")
-                        elif joy_score <= JOY_SCORE_MIN > 0.0:
+                        elif joy_score > 0 and joy_score <= JOY_SCORE_MIN:
                             annotator.text((5,5), "I detect a sad human")
 
                         #if joy_score > JOY_SCORE_PEAK > prev_joy_score:
